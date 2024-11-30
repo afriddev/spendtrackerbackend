@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { NextResponse } from "next/server";
 import {
   exceptionEnums,
   responseEnums,
@@ -20,37 +21,38 @@ export async function handleLoginIMPL(
 
     if (userData?.emailId) {
       if (user?.otp) {
-        if (
-          userData?.emailId === user?.emailId &&
-          userData?.password === user?.password
-        ) {
-          if (userData?.otp === user.otp) {
+        
+          if (userData?.otp.toString() === user.otp?.toString()) {
             return { message: responseEnums?.SUCCESS, status: 200 };
           } else {
             return { message: userEnums?.INVALID_OTP, status: 200 };
           }
-        } else {
-          return { message: userEnums?.INVALID_PASSWORD, status: 200 };
-        }
       } else {
         const otp = getOTP();
 
         try {
-          const otpResponse = await sendOtp(user?.emailId, otp, "LOGIN");
-
-          await userModel.updateOne(
-            { emailId: user?.emailId },
-            {
-              $set: {
-                otp,
-              },
+          if(userData?.password === user?.password ){
+            const otpResponse = await sendOtp(user?.emailId, otp, "LOGIN");
+            await userModel.updateOne(
+              { emailId: user?.emailId },
+              {
+                $set: {
+                  otp,
+                },
+              }
+            );
+            if (otpResponse === responseEnums?.SUCCESS) {
+              return { message: userEnums?.OTP_SUCCESS, status: 200 };
+            } else {
+              return { message: responseEnums?.ERROR, status: 200 };
             }
-          );
-          if (otpResponse === responseEnums?.SUCCESS) {
-            return { message: userEnums?.OTP_SUCCESS, status: 200 };
-          } else {
-            return { message: responseEnums?.ERROR, status: 200 };
           }
+          else{
+            return {message:userEnums?.INVALID_PASSWORD,status:200}
+          }
+          
+          
+
         } catch {
           return { message: exceptionEnums?.SERVER_ERROR, status: 500 };
         }
