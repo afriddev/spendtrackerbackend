@@ -25,7 +25,7 @@ export async function handleLoginIMPL(
           if (userData?.otp.toString() === user.otp?.toString()) {
             return { message: responseEnums?.SUCCESS, status: 200 };
           } else {
-            return { message: userEnums?.INVALID_OTP, status: 200 };
+            return { message: responseEnums?.ERROR, status: 200 };
           }
       } else {
         const otp = getOTP();
@@ -42,7 +42,7 @@ export async function handleLoginIMPL(
               }
             );
             if (otpResponse === responseEnums?.SUCCESS) {
-              return { message: userEnums?.OTP_SUCCESS, status: 200 };
+              return { message: responseEnums?.SUCCESS, status: 200 };
             } else {
               return { message: responseEnums?.ERROR, status: 200 };
             }
