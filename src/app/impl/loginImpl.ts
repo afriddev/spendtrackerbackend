@@ -29,6 +29,7 @@ export async function handleLoginIMPL(
           }
       } else {
         const otp = getOTP();
+        console.log(otp)
 
         try {
           if(userData?.password === user?.password ){

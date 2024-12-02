@@ -1,7 +1,7 @@
-export function encodePassword(password:string) {
-    return Buffer.from(password).toString('base64');
+export function encodeEmailId(value:string) {
+    return Buffer.from(value).toString('base64');
 }
 
-export function decodePassword(encodedPassword:string) {
-    return Buffer.from(encodedPassword, 'base64').toString('utf-8');
+export function decodeAuthToken(value:string) {
+    return Buffer.from(value, 'base64').toString('utf-8');
 }
