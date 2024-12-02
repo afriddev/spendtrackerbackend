@@ -6,7 +6,18 @@ import { userSignUpPayloadType } from "@/app/types/userType";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const request: userSignUpPayloadType = await req.json();
+  try {
+    var request = await req?.json();
+  } catch {
+    return NextResponse.json(
+      {
+        message: exceptionEnums?.BAD_REQUEST,
+      },
+      {
+        status: 400,
+      }
+    );
+  }
 
   if (request?.emailId && request?.firstName && request?.password) {
     try {
@@ -19,7 +30,6 @@ export async function POST(req: Request) {
         {
           status: 200,
         }
-
       );
     }
 
@@ -31,10 +41,6 @@ export async function POST(req: Request) {
       },
       { status }
     );
-    
-   
-    
-
   } else {
     return NextResponse.json(
       {

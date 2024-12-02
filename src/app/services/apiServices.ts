@@ -21,7 +21,6 @@ export async function sendOtp(emailId: string, otp:number,method?: "LOGIN" | "SI
     }),
   });
   const result = await response.json();
-  console.log(result)
 
   return result?.message === "emailSendSuccess"
     ? responseEnums?.SUCCESS

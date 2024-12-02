@@ -63,15 +63,19 @@ async function handleSignUpIMPL(
         });
         const userAmountData = await userAmountsModel.create({
           emailId: user?.emailId,
+          createdAt:getTodayDate(),
+          lastUpdatedAt:getTodayDate()
         });
 
-        const userSPendsData = await userSpendsModel.create({
+        const userSpendsData = await userSpendsModel.create({
           emailId: user?.emailId,
+          createdAt:getTodayDate(),
+          lastUpdatedAt:getTodayDate()
         });
 
         if (
           userData?.emailId &&
-          userSPendsData?.emailId &&
+          userSpendsData?.emailId &&
           userAmountData?.emailId
         ) {
           await tempUsersModel.deleteMany({
@@ -84,7 +88,6 @@ async function handleSignUpIMPL(
       }
     } else {
       const otp = getOTP();
-      console.log(otp)
       const otpResponse = await sendOtp(user.emailId, otp, "SIGNUP");
       if (otpResponse === responseEnums?.SUCCESS) {
         try {

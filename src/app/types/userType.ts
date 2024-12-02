@@ -13,3 +13,8 @@ export type userLoginPayloadType = {
     password:string,
     otp?:number | null
 }
+export type configureAmountsPayloadType = {
+    monthlyAmount:number,
+    emailId:string
+
+}

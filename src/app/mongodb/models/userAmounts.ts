@@ -11,8 +11,6 @@ const userAmountsSchema = new Schema({
     required: false,
     default: null,
   },
-  
-  
   createdAt: {
     type: String,
     required: false,

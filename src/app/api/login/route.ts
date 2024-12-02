@@ -6,7 +6,18 @@ import { encodeString } from "@/app/utils/auth/authHandlers";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const request = await req.json();
+  try {
+    var request = await req?.json();
+  } catch {
+    return NextResponse.json(
+      {
+        message: exceptionEnums?.BAD_REQUEST,
+      },
+      {
+        status: 400,
+      }
+    );
+  }
   if (request?.emailId && request?.password) {
     try {
       await connectDB();
@@ -30,7 +41,6 @@ export async function POST(req: Request) {
       response.cookies.set("ca", userData?.ca);
     }
     //response.cookies.set("ca", "", { expires: new Date(0) });
-
 
     return response;
   } else {

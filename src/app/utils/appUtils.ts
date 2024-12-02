@@ -11,9 +11,11 @@ export function getTodayDate(): string {
   const day = today.getDate();
   const month = today.getMonth() + 1;
   const year = today.getFullYear();
-  return `${day} ${month} ${year}`;
+  const hours = today.getHours();
+  const minutes = today.getMinutes();
+  const seconds = today.getSeconds();
+  return `${day} ${month} ${year} ${hours}:${minutes}:${seconds}`;
 }
-
 export function getTodayDay(): number {
   const today = new Date();
   return today.getTime();
