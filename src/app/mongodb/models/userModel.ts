@@ -21,7 +21,6 @@ const userSchema = new Schema({
   otp: {
     type: Number,
   },
-
   firstName: {
     type: String,
     required: true,
@@ -55,7 +54,11 @@ const userSchema = new Schema({
     type: String,
     required: false,
   },
-  
+  ca:{
+    type:Boolean,
+    required:false,
+    default:true
+  }
   
 },{
   versionKey: false,

@@ -12,7 +12,8 @@ import userModel from "../mongodb/models/userModel";
 import userSpendsModel from "../mongodb/models/usersSpends";
 import { sendOtp } from "../services/apiServices";
 import { userSignUpPayloadType } from "../types/userType";
-import { getOTP } from "../utils/appUtils";
+import { getOTP, getTodayDate } from "../utils/appUtils";
+import { encodeString } from "../utils/auth/authHandlers";
 
 async function handleSignUpIMPL(
   user: userSignUpPayloadType
@@ -54,7 +55,11 @@ async function handleSignUpIMPL(
           loggedIn: false,
           phoneNumber: user.phoneNumber,
           authToken: user?.authToken,
-          password: user?.password,
+          password: encodeString(user?.password),
+          ca:true,
+          createdAt:getTodayDate(),
+          lastUpdatedAt:getTodayDate()
+
         });
         const userAmountData = await userAmountsModel.create({
           emailId: user?.emailId,
@@ -69,7 +74,7 @@ async function handleSignUpIMPL(
           userSPendsData?.emailId &&
           userAmountData?.emailId
         ) {
-          await tempUsersModel.deleteOne({
+          await tempUsersModel.deleteMany({
             emailId: user?.emailId,
           });
           return { status: 201, message: responseEnums?.SUCCESS };
@@ -79,10 +84,8 @@ async function handleSignUpIMPL(
       }
     } else {
       const otp = getOTP();
-      console.log(user.emailId)
+      console.log(otp)
       const otpResponse = await sendOtp(user.emailId, otp, "SIGNUP");
-      console.log(otpResponse)
-
       if (otpResponse === responseEnums?.SUCCESS) {
         try {
           await tempUsersModel?.updateOne(

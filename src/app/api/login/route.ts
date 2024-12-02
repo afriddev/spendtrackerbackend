@@ -1,7 +1,8 @@
 import { exceptionEnums, responseEnums } from "@/app/enums/responseEnums";
 import { handleLoginIMPL } from "@/app/impl/loginImpl";
 import connectDB from "@/app/mongodb/connectors/connectDB";
-import { encodeEmailId } from "@/app/utils/auth/authHandlers";
+import userModel from "@/app/mongodb/models/userModel";
+import { encodeString } from "@/app/utils/auth/authHandlers";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -16,16 +17,6 @@ export async function POST(req: Request) {
     }
 
     const { message, status } = await handleLoginIMPL(request);
-
-
-    if(request?.otp && message === responseEnums?.SUCCESS){
-      const response = NextResponse.next()
-      response.cookies.set('authToken', encodeEmailId(request?.emailId))
-    }
-
-
-
-
     const response = NextResponse.json(
       {
         message,
@@ -33,9 +24,15 @@ export async function POST(req: Request) {
       { status }
     );
 
-    
+    if (request?.otp && message === responseEnums?.SUCCESS) {
+      const userData = await userModel.findOne({ emailId: request?.emailId });
+      response.cookies.set("authToken", encodeString(request?.emailId));
+      response.cookies.set("ca", userData?.ca);
+    }
+    //response.cookies.set("ca", "", { expires: new Date(0) });
 
-    return response
+
+    return response;
   } else {
     return NextResponse.json(
       {
